@@ -1,0 +1,111 @@
+{% extends "base.html" %}
+
+{% block headtags %}
+<title>Kirill Vasiltsov | Personal website</title>
+<meta property="og:url" content="https://www.kirillvasiltsov.com/" />
+<meta property="og:type" content="article" />
+<meta property="og:title" content="Kirill Vasiltsov | Personal website" />
+<meta name="Description" content="Kirill Vasiltsov's personal website" />
+<meta property="og:description" content="Kirill Vasiltsov's personal website" />
+<!-- <meta property="og:image" content="https://www.kirillvasiltsov.com/home.png" /> -->
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:creator" content="https://twitter.com/virtualkirill/" />
+<meta name="twitter:title" content="Kirill Vasiltsov | Personal website" />
+<meta name="twitter:description" content="Kirill Vasiltsov's personal website" />
+<!-- <meta name="twitter:image" content="https://www.kirillvasiltsov.com/home.png" /> -->
+{% endblock headtags %}
+
+{% block styles %}
+<style>
+  main {
+      max-width: 768px;
+      margin: 0 auto;
+      display: grid;
+      place-items: center;
+      min-height: 100%;
+  }
+
+  h1,
+  h2 {
+      line-height: 1.2;
+      font-weight: bold;
+      letter-spacing: -0.01em;
+  }
+
+  h2 {
+      font-size: 1.2rem;
+      filter: brightness(0.8);
+  }
+
+  h2::after {
+      content: '';
+      border-right: 0.7em solid var(--aux);
+      margin-left: 0.5em;
+      font-size: 0.9em;
+      animation: 2s blink steps(2) infinite;
+  }
+
+  .introduction {
+    font-family: 'Lato', sans-serif;
+  }
+
+  .quick-links__list {
+      display: grid;
+      padding-left: 0;
+      padding-top: 1em;
+      column-gap: 1em;
+      grid-template-columns: repeat(5, max-content);
+      perspective: 850px;
+  }
+  
+  .quick-links__list > li > a {
+      font-weight: bold;
+  }
+
+  .quick-links__list > li:hover {
+      transform: rotateY(25deg) rotateX(10deg) rotateZ(-2deg);
+      filter: drop-shadow(-2px 2px 0px var(--bg))
+          drop-shadow(-2px 2px 0px hsla(258, 71%, 80%, 0.4));
+  }
+
+  .quick-links__list > li:hover > a {
+    color: var(--beige);
+  }
+
+  @keyframes blink {
+      from {
+          visibility: hidden;
+      }
+      to {
+          visibility: visible;
+      }
+  }
+</style>
+{% endblock styles %}
+
+{% block content %}
+<main>
+  <section class="introduction">
+      <h1>Kirill Vasiltsov</h1>
+      <h2>Software engineer</h2>
+
+      <nav class="quick-links">
+          <ul class="quick-links__list">
+              <li>
+                  <a href="https://github.com/jlkiri">GitHub</a>
+              </li>
+              <li>
+                  <a href="https://twitter.com/virtualkirill">Twitter</a>
+              </li>
+              <li>
+                  <a href="mailto:interalia.dev@gmail.com">Email</a>
+              </li>
+              <li>
+                <a href="/about">About</a>
+            </li>
+            <li><a href="/writing">Blog</a></li>
+          </ul>
+      </nav>
+  </section>
+</main>
+{% endblock content %}
