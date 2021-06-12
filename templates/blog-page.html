@@ -1,5 +1,29 @@
 {% extends "base.html" %}
 
+{% block headtags %}
+  <title>{{ page.title }} | Writing | Kirill Vasiltsov</title>
+  <meta
+    property="og:url"
+    content="{{page.path}}"
+  />
+  <meta property="og:type" content="article" />
+  <meta property="og:title" content="{{ page.title }}" />
+  <meta name="Description" content="{% if page.spoiler %}{{page.spoiler}}{% else %}{{page.title}}{% endif %}" />
+  <meta property="og:description" content="{% if page.spoiler %}{{page.spoiler}}{% else %}{{page.title}}{% endif %}" />
+  <meta
+    property="og:image"
+    content="https://www.kirillvasiltsov.com/thumbnail.png"
+  />
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:creator" content="https://twitter.com/virtualkirill/" />
+  <meta name="twitter:title" content="{{ page.title }}" />
+  <meta name="twitter:description" content="{% if page.spoiler %}{{page.spoiler}}{% else %}{{page.title}}{% endif %}" />
+  <meta
+    name="twitter:image"
+    content="https://www.kirillvasiltsov.com/thumbnail.png"
+  />
+{% endblock headtags %}
+
 {% block styles %}
 <style>
   h1 {
