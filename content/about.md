@@ -7,7 +7,7 @@ Hi! My name is Kirill and I am software engineer at [Yumemi Inc.](https://yumemi
 
 ## What I've done
 
-- Static testing library [statictrace](https://github.com/yumemi-inc/statictrace): a new approach to code quality assurance that utilizes TypeScript compiler API to be used alongside traditional tests and documentation.
+- [statictrace](https://github.com/yumemi-inc/statictrace): a library for semi-automatic static testing. A new approach to code quality assurance that utilizes TypeScript compiler API to be used alongside traditional tests and documentation.
 - [orogene](https://github.com/orogene/orogene): a next-generation package manager written in Rust for JavaScript/Node.js projects.
 - [rust-sdlang](https://github.com/jlkiri/rust-sdlang), [react-easy-flip](https://github.com/jlkiri/react-easy-flip) and more.
 - I [spoke](https://www.youtube.com/watch?v=9S8GUTcMsgA) at [Svelte Summit](https://sveltesummit.com/) 2020 ([see text version](https://www.kirillvasiltsov.com/writing/unlocking-the-power-of-svelte-actions/)).
