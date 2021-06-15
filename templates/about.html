@@ -1,26 +1,24 @@
-{% extends "base.html" %}
-
-{% block styles %}
+{% extends "base.html" %} {% block styles %}
 <style>
-    main {
-      max-width: 768px;
-      margin: 0 auto;
-      display: grid;
-      place-items: center;
-      min-height: 100%;
+  main {
+    max-width: 768px;
+    margin: 0 auto;
+    display: grid;
+    place-items: center;
+    min-height: 100%;
   }
 
-  .construction {
-      text-align: center;
+  .about {
+    display: grid;
+    row-gap: 1em;
+  }
+
+  .about ul {
+    list-style: circle;
   }
 </style>
-{% endblock styles %}
-
-{% block content %}
+{% endblock styles %} {% block content %}
 <main>
-<div>
-<div class="construction">{{ page.content | safe }}</div>
-<div>Meanwhile, follow or talk to me on <a href="https://twitter.com/virtualkirill">Twitter!</a></div>
-</div>
+  <div class="about">{{ page.content | safe }}</div>
 </main>
 {% endblock content %}
