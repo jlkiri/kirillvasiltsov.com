@@ -1,5 +1,4 @@
 [[redirects]]
   from = "/nodeinrust"
   to = "https://github.com/jlkiri/nodeinrust"
-  status = 301
   force = true
