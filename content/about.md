@@ -3,7 +3,7 @@ title = "About me"
 template = "about.html"
 +++
 
-Hi! My name is Kirill and I am software engineer at [Yumemi Inc.](https://yumemi.co.jp/) and an [OSS contributor](https://github.com/jlkiri).
+Hi! My name is Kirill and I am software engineer at [Progate Inc.](https://progate.com/) and an [OSS contributor](https://github.com/jlkiri).
 
 ## What I've done
 
