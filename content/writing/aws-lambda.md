@@ -111,3 +111,61 @@ The `Deserialize` part is important. This tells `serde` _how_ to deserialize tex
 let payload = req.payload::<SearchRequest>()?; // Deserialize request.
 let data = payload.ok_or("No body!")?; // Check if body exists.
 ```
+
+## CDK project
+
+We are ready to create a CDK project which is responsible for deploying our lambda to the cloud. Create a `lambda` folder (or choose whatever name you want) and execute the following command in it:
+
+```
+cdk init app --language=typescript
+```
+
+This will generate all the files we'll need. Open `lambda\lib\lambda-stack.ts` which should look like this:
+
+```ts
+import * as cdk from "@aws-cdk/core";
+
+export class LambdaStack extends cdk.Stack {
+  constructor(scope: cdk.Construct, id: string, props?: cdk.StackProps) {
+    super(scope, id, props);
+
+    // The code that defines your stack goes here
+  }
+}
+```
+
+Let's check that everything is OK by running `cdk synth` which does a dry run and shows you the CloudFormation code it would generate. There is not much we can do without installing _constructs_ - the basic building blocks of AWS CDK apps which, so let's do it first.
+
+```
+npm install @aws-cdk/aws-lambda @aws-cdk/aws-apigatewayv2-integrations @aws-cdk/aws-apigatewayv2  @aws-cdk/aws-apigatewayv2
+```
+
+```ts
+import * as apigw from "@aws-cdk/aws-apigatewayv2";
+import * as intg from "@aws-cdk/aws-apigatewayv2-integrations";
+import * as lambda from "@aws-cdk/aws-lambda";
+import * as cdk from "@aws-cdk/core";
+```
+
+Now we can actually _define_ a lambda function inside the `constructor` above:
+
+```ts
+const glitchHandler = new lambda.Function(this, "GlitchHandler", {
+  code: lambda.Code.fromAsset("../artifacts"),
+  handler: "unrelated",
+  runtime: lambda.Runtime.PROVIDED_AL2,
+});
+```
+
+`code` is where our binary lies. `handler`, normally, is the name of the actual function to call but it seems to be irrelevant when using custom runtimes, so just choose any string you want. Finally, `runtime` is `PROVIDED_AL2` which simply means we bring our own runtime (which we earlier installed as a Rust dependency) that will work on Amazon Linux 2. Just a lambda is not enough, however. Lambdas are not publicly accessible from outside of the cloud by default and we need to use API Gateway to connect the function to the outside world. To do this, add the following to your CDK code:
+
+```ts
+const glitchApi = new apigw.HttpApi(this, "GlitchAPI", {
+  description: "Image glitching API",
+  defaultIntegration: new intg.LambdaProxyIntegration({
+    handler: glitchHandler,
+  }),
+});
+```
+
+The code is pretty self-explanatory. But there is one thing we forgot. CORS. Right, now is the best time to think about CORS so we don't have to discover that CORS is the reason our lambda doesn't work later.
