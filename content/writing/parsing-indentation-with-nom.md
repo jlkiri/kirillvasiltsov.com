@@ -3,7 +3,7 @@ title: Parsing indentation with nom
 date: "2021-10-14"
 ---
 
-`nom` is an awesome parser combinator written in Rust and I believe it needs no introduction at this point. If you've never heard about it you wouldn't be reading this article anyway.
+[`nom`](https://github.com/Geal/nom) is an awesome parser combinator written in Rust and I believe it needs no introduction at this point. If you've never heard about it you wouldn't be reading this article anyway.
 
 So, I needed to parse indendation for one of my projects ([Beemo](https://github.com/jlkiri/beemo) programming language) but couldn't find a convenient primitive in `nom`. One reason is that `nom` parsers do not really have access to any kind of state and it's not easy to make them do so. However it turns out it is not very hard if you wrap your parsers properly.
 
