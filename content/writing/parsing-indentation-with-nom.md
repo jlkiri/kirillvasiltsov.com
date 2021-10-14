@@ -92,4 +92,6 @@ We get the following output:
  */
 ```
 
+View full code here: https://github.com/jlkiri/nom-indentation-poc
+
 Note that this examples assumes that nothing in your input can be multiline. I'm not sure how this approach would translate and maybe all you'll need to do is to handle a couple of edge cases. Let me know if there are other better ways to parse indentation with `nom`!
