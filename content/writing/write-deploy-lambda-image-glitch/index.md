@@ -1,10 +1,11 @@
 ---
 title: "Writing and deploying Rust Lambda function to AWS: Image glitch as a service"
 date: 2021-10-28
+spoiler: Build and deploy a nanoservice that responds with glitched images in Rust.
 language: en
 ---
 
-Ever since AWS released [Rust runtime for AWS lambda](https://aws.amazon.com/blogs/opensource/rust-runtime-for-aws-lambda/) I've been wanting to try it out. In this article I am going to walk you through every step required to write and deploy a lambda written in Rust to AWS. 
+Ever since AWS released [Rust runtime for AWS lambda](https://aws.amazon.com/blogs/opensource/rust-runtime-for-aws-lambda/) I've been wanting to try it out. In this article I am going to walk you through every step required to write and deploy a lambda written in Rust to AWS.
 
 To avoid making this article too big I assume you are familiar with basic Rust, Docker and Node. Also make sure you have Rust toolchain, Docker and Node.js installed in your environment.
 
@@ -19,7 +20,7 @@ cargo new glitch
 cd glitch
 ```
 
-Let's build the core of our API: a glitch function. Actually, two glitch functions. I must warn you that I'm not a professional glitch artist and that there is a lot of depth to glitch art, but the two simple tricks below will suffice. One trick is to just take a byte of the image you want to glitch and replace it with some random byte. Another trick is to take an arbitrary *sequence* of bytes and sort it. Rust does not come with a random number generator so we need to install it first:
+Let's build the core of our API: a glitch function. Actually, two glitch functions. I must warn you that I'm not a professional glitch artist and that there is a lot of depth to glitch art, but the two simple tricks below will suffice. One trick is to just take a byte of the image you want to glitch and replace it with some random byte. Another trick is to take an arbitrary _sequence_ of bytes and sort it. Rust does not come with a random number generator so we need to install it first:
 
 ```toml
 [dependencies]
@@ -244,7 +245,7 @@ FROM chef AS planner
 COPY . .
 RUN cargo chef prepare --recipe-path recipe.json
 
-FROM chef AS builder 
+FROM chef AS builder
 COPY --from=planner /app/recipe.json recipe.json
 # Build dependencies - this is the caching Docker layer!
 RUN cargo chef cook --release --recipe-path recipe.json
@@ -271,8 +272,8 @@ Ideally we want to know the URL of our API Gateway immediately and there is a ni
 
 ```ts
 new cdk.CfnOutput(this, "glitchApi", {
-      value: glitchApi.url!,
-    });
+  value: glitchApi.url!,
+});
 ```
 
 Now if we add the `--outputs-file` option to the `cdk` command like this:
