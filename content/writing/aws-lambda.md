@@ -295,4 +295,4 @@ That was a lot of work but now we can finally call our glitch API. Prepare an im
 curl -X POST https://your-gateway-api-url.amazonaws.com --data-binary "@pic.jpg" -o glitched.jpg
 ```
 
-You should see a `glitched.jpg` file that is glitched and hopefully looks aesthetically pleasing! Now that everything is working, you can play with the sequence of glitches, the size of the chunk that is sorted etc.
+You should see a `glitched.jpg` file that is glitched and hopefully looks aesthetically pleasing! Now that everything is working, you can play with the settings like the number and order of glitches, the size of the chunk that is sorted etc. If you know other simple ways to achieve nice-looking glitches, feel free to [tell me on Twitter](https://twitter.com/virtualkirill)!
