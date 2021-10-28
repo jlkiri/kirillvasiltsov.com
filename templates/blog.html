@@ -1,13 +1,11 @@
-{% extends "base.html" %}
-
-{% block styles %}
+{% extends "base.html" %} {% block styles %}
 <style>
   main {
-      max-width: 768px;
-      margin: 0 auto;
-      display: grid;
-      place-items: center;
-      min-height: 100%;
+    max-width: 768px;
+    margin: 0 auto;
+    display: grid;
+    place-items: center;
+    min-height: 100%;
   }
 
   ul {
@@ -27,7 +25,8 @@
   }
 
   .date {
-    color: var(--beige);
+    color: black;
+    font-weight: bold;
     font-size: 0.8em;
   }
 
@@ -35,14 +34,13 @@
     word-break: break-word;
   }
 </style>
-{% endblock styles %}
-
-{% block content %}
+{% endblock styles %} {% block content %}
 <main>
-<ul>
-  {% for page in section.pages %}
-  <div class="date">{{page.date}}</div><li><a href="{{ page.permalink | safe }}">{{ page.title }}</a></li>
-  {% endfor %}
-</ul>
+  <ul>
+    {% for page in section.pages %}
+    <div class="date">{{page.date}}</div>
+    <li><a href="{{ page.permalink | safe }}">{{ page.title }}</a></li>
+    {% endfor %}
+  </ul>
 </main>
 {% endblock content %}

@@ -1,20 +1,23 @@
 <!DOCTYPE html>
 <html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" href="/favicon.ico" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" href="/base.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=PT+Serif:ital,wght@0,400;0,700;1,400&display=swap"
+      rel="stylesheet"
+    />
+    <script async src="https://cdn.splitbee.io/sb.js"></script>
 
-<head>
-  <meta charset="utf-8" />
-  <link rel="icon" href="/favicon.ico" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <link rel="stylesheet" href="/base.css" />
-  <script async src="https://cdn.splitbee.io/sb.js"></script>
-  
-  {% block headtags %} {% endblock %}
-  {% block scripts %} {% endblock %}
-  {% block styles %} {% endblock %}
-</head>
+    {% block headtags %} {% endblock %} {% block scripts %} {% endblock %} {%
+    block styles %} {% endblock %}
+  </head>
 
-<body>
-  {% block content %} {% endblock %}
-</body>
-
+  <body>
+    {% block content %} {% endblock %}
+  </body>
 </html>

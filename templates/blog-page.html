@@ -1,42 +1,44 @@
-{% extends "base.html" %}
-
-{% block headtags %}
-  <title>{{ page.title }} | Writing | Kirill Vasiltsov</title>
-  <meta
-    property="og:url"
-    content="{{page.path}}"
-  />
-  <meta property="og:type" content="article" />
-  <meta property="og:title" content="{{ page.title }}" />
-  <meta name="Description" content="{% if page.spoiler %}{{page.spoiler}}{% else %}{{page.title}}{% endif %}" />
-  <meta property="og:description" content="{% if page.spoiler %}{{page.spoiler}}{% else %}{{page.title}}{% endif %}" />
-  <meta
-    property="og:image"
-    content="https://www.kirillvasiltsov.com/thumbnail.png"
-  />
-  <meta name="twitter:card" content="summary" />
-  <meta name="twitter:creator" content="https://twitter.com/virtualkirill/" />
-  <meta name="twitter:title" content="{{ page.title }}" />
-  <meta name="twitter:description" content="{% if page.spoiler %}{{page.spoiler}}{% else %}{{page.title}}{% endif %}" />
-  <meta
-    name="twitter:image"
-    content="https://www.kirillvasiltsov.com/thumbnail.png"
-  />
-{% endblock headtags %}
-
-{% block styles %}
+{% extends "base.html" %} {% block headtags %}
+<title>{{ page.title }} | Writing | Kirill Vasiltsov</title>
+<meta property="og:url" content="{{page.path}}" />
+<meta property="og:type" content="article" />
+<meta property="og:title" content="{{ page.title }}" />
+<meta
+  name="Description"
+  content="{% if page.spoiler %}{{page.spoiler}}{% else %}{{page.title}}{% endif %}"
+/>
+<meta
+  property="og:description"
+  content="{% if page.spoiler %}{{page.spoiler}}{% else %}{{page.title}}{% endif %}"
+/>
+<meta
+  property="og:image"
+  content="https://www.kirillvasiltsov.com/thumbnail.png"
+/>
+<meta name="twitter:card" content="summary" />
+<meta name="twitter:creator" content="https://twitter.com/virtualkirill/" />
+<meta name="twitter:title" content="{{ page.title }}" />
+<meta
+  name="twitter:description"
+  content="{% if page.spoiler %}{{page.spoiler}}{% else %}{{page.title}}{% endif %}"
+/>
+<meta
+  name="twitter:image"
+  content="https://www.kirillvasiltsov.com/thumbnail.png"
+/>
+{% endblock headtags %} {% block styles %}
 <style>
   h1 {
     font-size: 1.8em;
   }
 
   main {
-      max-width: 768px;
-      margin: 0 auto;
-      display: grid;
-      min-height: 100%;
-      padding: 1em;
-      row-gap: 1em;
+    max-width: 768px;
+    margin: 0 auto;
+    display: grid;
+    min-height: 100%;
+    padding: 1em;
+    row-gap: 1em;
   }
 
   img {
@@ -50,14 +52,16 @@
     max-width: 100%;
     overflow-x: auto;
   }
-</style>
-{% endblock styles %}
 
-{% block content %}
+  p > code {
+    background-color: rgb(221, 200, 180);
+    padding: 0.15em;
+    border-radius: 0.3em;
+  }
+</style>
+{% endblock styles %} {% block content %}
 <main>
-<h1 class="title">
-  {{ page.title }}
-</h1>
-{{ page.content | safe }}
+  <h1 class="title">{{ page.title }}</h1>
+  {{ page.content | safe }}
 </main>
 {% endblock content %}
