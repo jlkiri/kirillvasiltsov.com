@@ -5,11 +5,11 @@
 <meta property="og:title" content="{{ page.title }}" />
 <meta
   name="Description"
-  content="{% if page.spoiler %}{{page.spoiler}}{% else %}{{page.title}}{% endif %}"
+  content="{% if page.summary %}{{page.summary}}{% else %}{{page.title}}{% endif %}"
 />
 <meta
   property="og:description"
-  content="{% if page.spoiler %}{{page.spoiler}}{% else %}{{page.title}}{% endif %}"
+  content="{% if page.summary %}{{page.summary}}{% else %}{{page.title}}{% endif %}"
 />
 <meta
   property="og:image"
@@ -20,7 +20,7 @@
 <meta name="twitter:title" content="{{ page.title }}" />
 <meta
   name="twitter:description"
-  content="{% if page.spoiler %}{{page.spoiler}}{% else %}{{page.title}}{% endif %}"
+  content="{% if page.summary %}{{page.summary}}{% else %}{{page.title}}{% endif %}"
 />
 <meta
   name="twitter:image"
