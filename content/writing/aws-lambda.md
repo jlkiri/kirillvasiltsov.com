@@ -110,7 +110,7 @@ async fn apply_glitch(mut req: Request, _c: Context) -> Result<impl IntoResponse
 }
 ```
 
-Note the useful `IntoResponse` trait that allows us to just return things like `String`s and `Vec<u8>`s without thinking much about response headers. 
+Note the useful `IntoResponse` trait that allows us to just return things like `String`s and `Vec<u8>`s without thinking much about response headers.
 
 ## main.rs: Main
 
@@ -130,9 +130,26 @@ async fn main() -> Result<(), Error> {
 
 Don't forget the `#[tokio::main]` bit. This is an [attribute macro](https://doc.rust-lang.org/reference/procedural-macros.html) from `tokio` that does some magic under the hood to make our `main` function async.
 
+## Deploying to AWS
+
+There are multiple ways to deploy this to AWS. One of them is using the AWS console. I find the console confusing for many tasks, even simple ones, so I am very excited that there exists another way: CDK. It is a Node.js library that allows us to define the required AWS resources declaratively with real code. It comes with TypeScript type definitions so in a lot of cases we don't even need to look into the documentation.
+
 ## CDK project
 
-We are ready to create a CDK project which is responsible for deploying our lambda to the cloud. Create a `lambda` folder (or choose whatever name you want) and execute the following command in it:
+The only downside of CDK is that it requires a couple things in our local environment: [`aws` CLI](https://aws.amazon.com/cli/) and Node.js. Make sure the CLI is configured with your credentials. Next, install CDK:
+
+```
+npm install -g aws-cdk
+cdk --version
+```
+
+CDK requires that some resources exist prior to any deployments like buckets that your CDK output (which is basically a CloudFormation stack) and other artifacts like Lambda functions are uploaded to. This is done with `bootstrap` command.
+
+```
+cdk bootstrap aws://ACCOUNT-NUMBER/REGION
+```
+
+Now we are ready to create a new CDK project which is responsible for deploying our lambda to the cloud. Create a `lambda` folder (or choose whatever name you want) in the root of your Rust project and execute the following command in it:
 
 ```
 cdk init app --language=typescript
@@ -152,11 +169,13 @@ export class LambdaStack extends cdk.Stack {
 }
 ```
 
-Let's check that everything is OK by running `cdk synth` which does a dry run and shows you the CloudFormation code it would generate. There is not much we can do without installing _constructs_ - the basic building blocks of AWS CDK apps which, so let's do it first.
+Let's check that everything is OK by running `cdk synth` which does a dry run and shows you the CloudFormation code it would generate. Right now, there is not much we can do without installing additional _constructs_ - the basic building blocks of AWS CDK apps, so let's do it first.
 
 ```
-npm install @aws-cdk/aws-lambda @aws-cdk/aws-apigatewayv2-integrations @aws-cdk/aws-apigatewayv2  @aws-cdk/aws-apigatewayv2
+npm install @aws-cdk/aws-lambda @aws-cdk/aws-apigatewayv2-integrations @aws-cdk/aws-apigatewayv2 @aws-cdk/aws-apigatewayv2
 ```
+
+Import these in your `lambda/lib/lambda-stack.ts`:
 
 ```ts
 import * as apigw from "@aws-cdk/aws-apigatewayv2";
@@ -175,7 +194,7 @@ const glitchHandler = new lambda.Function(this, "GlitchHandler", {
 });
 ```
 
-`code` is where our binary lies. `handler`, normally, is the name of the actual function to call but it seems to be irrelevant when using custom runtimes, so just choose any string you want. Finally, `runtime` is `PROVIDED_AL2` which simply means we bring our own runtime (which we earlier installed as a Rust dependency) that will work on Amazon Linux 2. Just a lambda is not enough, however. Lambdas are not publicly accessible from outside of the cloud by default and we need to use API Gateway to connect the function to the outside world. To do this, add the following to your CDK code:
+`code` is where our binary lies (we will get to it soon). `handler`, normally, is the name of the actual function to call but it seems to be irrelevant when using custom runtimes, so just choose any string you want. Finally, `runtime` is `PROVIDED_AL2` which simply means we bring our own runtime (which we earlier installed as a Rust dependency) that will work on Amazon Linux 2. Just a lambda is not enough, however. Lambdas are not publicly accessible from outside of the cloud by default and we need to use API Gateway to connect the function to the outside world. To do this, add the following to your CDK code:
 
 ```ts
 const glitchApi = new apigw.HttpApi(this, "GlitchAPI", {
@@ -186,4 +205,94 @@ const glitchApi = new apigw.HttpApi(this, "GlitchAPI", {
 });
 ```
 
-The code is pretty self-explanatory. But there is one thing we forgot. CORS. Right, now is the best time to think about CORS so we don't have to discover that CORS is the reason our lambda doesn't work later.
+This code is pretty self-explanatory. It creates an HTTP API Gateway that will trigger our lambda, `glitchHandler`, which we defined above, on incoming requests. Note how CDK makes it easy to refer to other resources: by using actual references within code.
+
+## Building a binary
+
+We're almost ready but we need to make sure that CDK can see and upload our lambda binary. Normally Rust puts the build output inside `target/` folder and gives it the same name as your package name:
+
+```toml
+[package]
+name = "glitch"
+```
+
+One weird thing about AWS Rust lambdas is that the binary needs to be named `bootstrap`. To do this, we need to add some settings to `Cargo.toml`:
+
+```toml
+[package]
+autobins = false
+
+[[bin]]
+name = "bootstrap"
+path = "src/main.rs"
+```
+
+This takes care of the name. Next, we could also change the output folder to `artifacts` so CDK can see it and `cargo build` the project directly but let's imagine that you want to work on this project in different environments. The `bootstrap` binary actually MUST be built with `x86_64-unknown-linux-gnu` target. This is not possible on e.g. Windows, so let's use Docker!
+
+If you've ever used Docker with Rust you probably know that compiling can be painfully slow. This is because there is no `cargo` option to [build only dependencies](https://github.com/rust-lang/cargo/issues/2644) at the moment of writing.
+Luckily, there is a very good project [cargo-chef](https://crates.io/crates/cargo-chef) that provides a workaround. Here's how we use it in our Dockerfile (mostly copy-paste from the project's README):
+
+```Dockerfile
+FROM lukemathwalker/cargo-chef:latest-rust-1.53.0 AS chef
+WORKDIR /app
+
+FROM chef AS planner
+COPY . .
+RUN cargo chef prepare --recipe-path recipe.json
+
+FROM chef AS builder 
+COPY --from=planner /app/recipe.json recipe.json
+# Build dependencies - this is the caching Docker layer!
+RUN cargo chef cook --release --recipe-path recipe.json
+COPY . .
+RUN cargo build --release
+
+FROM scratch AS export
+COPY --from=builder /app/target/release/bootstrap /
+```
+
+With this, if we run:
+
+```
+docker build -o artifacts .
+```
+
+Docker will build a `x86_64-unknown-linux-gnu` binary and put it inside `artifacts` folder. Finally, CDK has all it needs to successfully deploy our lambda! So let's do it (you need to be inside the `lambda` folder):
+
+```
+cdk deploy
+```
+
+Ideally we want to know the URL of our API Gateway immediately and there is a nice way to make CDK output this info by writing a couple more lines:
+
+```ts
+new cdk.CfnOutput(this, "glitchApi", {
+      value: glitchApi.url!,
+    });
+```
+
+Now if we add the `--outputs-file` option to the `cdk` command like this:
+
+```
+cdk deploy --outputs-file cdk-outputs.json
+```
+
+we will see a `lambda/cdk-outputs.json` file that has the URL inside:
+
+```json
+{
+  "LambdaStack": {
+    "glitchApi": "https://your-gateway-api-url.amazonaws.com/"
+  }
+}
+```
+
+## Glitch!
+
+That was a lot of work but now we can finally call our glitch API. Prepare an image file you want to glitch and do this:
+
+```
+curl -X POST https://your-gateway-api-url.amazonaws.com --data-binary "@pic.jpg" -o glitched.jpg
+```
+
+You should see a `glitched.jpg` file that is glitched and hopefully looks aesthetically pleasing! Now that everything is working, you can play with the sequence of glitches, the size of the chunk that is sorted etc.
