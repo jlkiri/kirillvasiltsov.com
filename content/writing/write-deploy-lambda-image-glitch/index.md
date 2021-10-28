@@ -1,7 +1,7 @@
 ---
 title: "Writing and deploying Rust Lambda function to AWS: Image glitch as a service"
 date: 2021-10-28
-summary: Build and deploy a nanoservice that responds with glitched images in Rust.
+description: Build and deploy a nanoservice that responds with glitched images in Rust.
 language: en
 ---
 
