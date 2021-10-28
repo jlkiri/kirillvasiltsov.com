@@ -119,6 +119,10 @@ Next, we need to simply wrap our actual handler in a `lambda_http::handler`. Thi
 ```rust
 use lambda_runtime::{self, Error};
 use lambda_http::handler;
+use jemallocator;
+
+#[global_allocator]
+static ALLOC: jemallocator::Jemalloc = jemallocator::Jemalloc;
 
 #[tokio::main]
 async fn main() -> Result<(), Error> {
@@ -128,7 +132,7 @@ async fn main() -> Result<(), Error> {
 }
 ```
 
-Don't forget the `#[tokio::main]` bit. This is an [attribute macro](https://doc.rust-lang.org/reference/procedural-macros.html) from `tokio` that does some magic under the hood to make our `main` function async.
+Don't forget the `#[tokio::main]` bit. This is an [attribute macro](https://doc.rust-lang.org/reference/procedural-macros.html) from `tokio` that does some magic under the hood to make our `main` function async. The `#[global_allocator]` part is also needed to make the lambda work but we will get to it later.
 
 ## Deploying to AWS
 
@@ -296,3 +300,5 @@ curl -X POST https://your-gateway-api-url.amazonaws.com --data-binary "@pic.jpg"
 ```
 
 You should see a `glitched.jpg` file that is glitched and hopefully looks aesthetically pleasing! Now that everything is working, you can play with the settings like the number and order of glitches, the size of the chunk that is sorted etc. If you know other simple ways to achieve nice-looking glitches, feel free to [tell me on Twitter](https://twitter.com/virtualkirill)!
+
+Wait...what about `jemallocator`? Oh yes, I promised to explain this as well. So, it seems that for quite a long time AWS lambdas needed to be built for `x86_64-unknown-linux-musl` target. This was a pain because it needed a `musl` toolchain which is not available by default. However, it looks like now you [CAN](https://umccr.org/blog/aws-bioinformatics-rust/) use `x86_64-unknown-linux-gnu` but with a caveat: you need to use `jemallocator`. This is literally just one install and one more line to your code. The default allocator Rust uses on Unix platforms is `malloc`. I do not know if this limitation will disappear in the future.
