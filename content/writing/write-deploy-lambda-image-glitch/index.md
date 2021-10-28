@@ -1,6 +1,6 @@
 ---
-title: "aws"
-date: 2021-09-28
+title: "Writing and deploying Rust Lambda function to AWS: Image glitch as a service"
+date: 2021-10-28
 language: en
 ---
 
@@ -293,12 +293,32 @@ we will see a `lambda/cdk-outputs.json` file that has the URL inside:
 
 ## Glitch!
 
-That was a lot of work but now we can finally call our glitch API. Prepare an image file you want to glitch and do this:
+That was a lot of work but now we can finally call our glitch API. It would be mean of me to not share a working link here as well. So here's the command that you can try right now to get a feel of the API:
+
+```
+curl -X POST https://ifzc7embya.execute-api.ap-northeast-1.amazonaws.com --data-binary "@pic.jpg" -o "glitches/$(date +%s).jpg"
+```
+
+I cannot guarantee that the service is going to be always up, though.
+
+Generally, to use the API ypu need to prepare an image file you want to glitch and do this:
 
 ```
 curl -X POST https://your-gateway-api-url.amazonaws.com --data-binary "@pic.jpg" -o glitched.jpg
 ```
 
 You should see a `glitched.jpg` file that is glitched and hopefully looks aesthetically pleasing! Now that everything is working, you can play with the settings like the number and order of glitches, the size of the chunk that is sorted etc. If you know other simple ways to achieve nice-looking glitches, feel free to [tell me on Twitter](https://twitter.com/virtualkirill)!
+
+## Examples
+
+Here are some of my favorite glitches I generated while playing with the API.
+
+![glitch1](./glitch1.png)
+
+![glitch2](./glitch2.png)
+
+![glitch3](./glitch3.png)
+
+![glitch4](./glitch4.png)
 
 Wait...what about `jemallocator`? Oh yes, I promised to explain this as well. So, it seems that for quite a long time AWS lambdas needed to be built for `x86_64-unknown-linux-musl` target. This was a pain because it needed a `musl` toolchain which is not available by default. However, it looks like now you [CAN](https://umccr.org/blog/aws-bioinformatics-rust/) use `x86_64-unknown-linux-gnu` but with a caveat: you need to use `jemallocator`. This is literally just one install and one more line to your code. The default allocator Rust uses on Unix platforms is `malloc`. I do not know if this limitation will disappear in the future.
