@@ -4,40 +4,73 @@ date: 2021-09-28
 language: en
 ---
 
-Ever since AWS released [Rust runtime for AWS lambda](https://aws.amazon.com/blogs/opensource/rust-runtime-for-aws-lambda/) I've been wanting to try it out. Now is the time and I am going to walk you through every step required to deploy a lambda written in Rust to AWS. I assume you have Rust toolchain, Docker and Node.js installed in your environment.
+Ever since AWS released [Rust runtime for AWS lambda](https://aws.amazon.com/blogs/opensource/rust-runtime-for-aws-lambda/) I've been wanting to try it out. In this article I am going to walk you through every step required to write and deploy a lambda written in Rust to AWS. 
 
-To avoid building another boring hello-world handler, we will build a _n a n o s e r v i c e_ that does a simple binary search and returns the result. Pretty useless but still fun and just enough for a walkthrough.
+To avoid making this article too big I assume you are familiar with basic Rust, Docker and Node. Also make sure you have Rust toolchain, Docker and Node.js installed in your environment.
+
+To avoid building yet another boring hello-world-like handler, we will build a _n a n o s e r v i c e_ that takes an image and returns a glitched version of it (which you can use as a profile picture etc. but that is up to you). Pretty useless in isolation but still fun and just enough for a good walkthrough.
 
 ## Start a fresh Rust project
 
 Let's begin with a fresh Rust project.
 
 ```
-cargo new bisearch
-cd bisearch
+cargo new glitch
+cd glitch
 ```
 
-Here's the core of our API: a binary search function. There's nothing new here so feel free to just copypaste it and move forward.
+Let's build the core of our API: a glitch function. Actually, two glitch functions. I must warn you that I'm not a professional glitch artist and that there is a lot of depth to glitch art, but the two simple tricks below will suffice. One trick is to just take a byte of the image you want to glitch and replace it with some random byte. Another trick is to take an arbitrary *sequence* of bytes and sort it. Rust does not come with a random number generator so we need to install it first:
+
+```toml
+[dependencies]
+rand = "0.8.4"
+```
+
+And here's the byte-replacing glitch function. We put it in `src/lib.rs`.
 
 ```rust
-fn binary_search(array: &[i32], num: i32) -> Option<usize> {
-    let mut lo = 0;
-    let mut hi = array.len() - 1;
-    while lo <= hi {
-        let mid = lo + (hi - lo) / 2;
-        match array[mid] {
-            n if n > num => {
-                hi = mid;
-            }
-            n if n < num => {
-                lo = mid;
-            }
-            _ => return Some(mid),
-        }
-    }
-    None
+use rand::{self, Rng};
+
+pub fn glitch_replace(image: &mut [u8]) {
+    let mut rng = rand::thread_rng();
+    let size = image.len() - 1;
+    let rand_idx: usize = rng.gen_range(0..=size);
+    image[rand_idx] = rng.gen_range(0..=255);
 }
 ```
+
+Nothing extraordinary here, we just take a reference to our image as a mutable slice of bytes and replace one. Next is the sort glitch:
+
+```rust
+const CHUNK_LEN: usize = 19;
+
+pub fn glitch_sort(image: &mut [u8]) {
+    let mut rng = rand::thread_rng();
+    let size = image.len() - 1;
+    let split_idx: usize = rng.gen_range(0..=size - CHUNK_LEN);
+    let (_left, right) = image.split_at_mut(split_idx);
+    let (glitched, _rest) = right.split_at_mut(CHUNK_LEN);
+    glitched.sort();
+}
+```
+
+Again there is nothing complicated here. Note a very convenient `split_at_mut` method that easily lets us select the chunk we want to sort. `CHUNK_LEN` is a variable in the sense that you can try different values and expected different glitch outcomes. I randomly chose 19.
+
+Finally, for more noticeable effect we apply these two functions multiple times as steps of one big glitch job.
+
+```rust
+pub fn glitch(image: &mut [u8]) {
+    glitch_replace(image);
+    glitch_sort(image);
+    glitch_replace(image);
+    glitch_sort(image);
+    glitch_replace(image);
+    glitch_sort(image);
+    glitch_sort(image);
+}
+```
+
+Next we move on to building a lambda.
 
 ## Cargo.toml: Download required dependencies
 
@@ -45,18 +78,43 @@ These are the minimal dependencies we'll need.
 
 ```toml
 [dependencies]
-lambda_runtime = "0.4.1"
 lambda_http = "0.4.1"
-serde = "1.0.130"
-serde_json = "1.0.68"
+lambda_runtime = "0.4.1"
 tokio = "1.12.0"
+rand = "0.8.4"
+jemallocator = "0.3.2"
 ```
 
-`lambda_runtime` is the runtime for our functions. This is required because Rust is not (yet) in the list of default runtimes at the time of writing. It possible, however to BYOR (bring your own runtime) to AWS and that's what we're doing here. `lambda_http` is a helper library that gives us type definitions for the request and context of the lambda. `serde` and `serde_json` are needed to (de)serialize requests and responses. Finally, `tokio` is an async runtime. Our handler is so simple we don't need async but `lambda_runtime` requires it so we have no choice but to play along. If you are unfamiliar with it, think of it as a library that runs Rust futures. We won't need to worry much about async apart from defining our functions as `async`.
+`lambda_runtime` is the runtime for our functions. This is required because Rust is not (yet) in the list of default runtimes at the time of writing. It possible, however to BYOR (bring your own runtime) to AWS and that's what we're doing here. `lambda_http` is a helper library that gives us type definitions for the request and context of the lambda. `tokio` is an async runtime. Our handler is so simple that we don't need `async` but `lambda_runtime` requires it so we have no choice but to play along. Just in case you are unfamiliar with it think of it as a library that runs Rust futures. We won't need to worry much about async apart from defining our functions as `async`. Finally, there is `jemallocator`. We will get to it later.
 
-## main.rs: Entrypoint
+## main.rs: Handler
 
-Alright, we have a binary search function but how do we turn it into a request handler? We need to simply wrap our actual handler in a `lambda_http::handler`. This creates a lambda that can be run by the lambda runtime we just installed. Literally two lines of code to hook everything up.
+Alright, we have a glitch function but how do use it in our request handler? Let us define `apply_glitch` handler that takes the request, extracts image bytes from the body and copies the glitched version into the response.
+
+```rust
+use lambda_http::handler;
+use lambda_http::Body;
+use lambda_http::{IntoResponse, Request};
+
+async fn apply_glitch(mut req: Request, _c: Context) -> Result<impl IntoResponse, Error> {
+    let payload = req.body_mut();
+    match payload {
+        Body::Binary(image) => {
+            glitch(image);
+            Ok(image.to_owned())
+        }
+        // Ideally you want to handle Text and Empty cases too.
+        // We use a special macro unimplemented!() that prevents the compiler from failing without all cases handled.
+        _ => unimplemented!(),
+    }
+}
+```
+
+Note the useful `IntoResponse` trait that allows us to just return things like `String`s and `Vec<u8>`s without thinking much about response headers. 
+
+## main.rs: Main
+
+Next, we need to simply wrap our actual handler in a `lambda_http::handler`. This creates an actual lambda that can be run by the lambda runtime we installed. Literally two lines of code to hook everything up.
 
 ```rust
 use lambda_runtime::{self, Error};
@@ -64,53 +122,13 @@ use lambda_http::handler;
 
 #[tokio::main]
 async fn main() -> Result<(), Error> {
-    let func = handler(find_index); // We define this function below.
+    let func = handler(apply_glitch);
     lambda_runtime::run(func).await?;
     Ok(())
 }
 ```
 
-## find_index: Handler function
-
-This is the most interesting part. Our function `find_index` is going to look like this:
-
-```rust
-use lambda_http::{
-    IntoResponse, Request, RequestExt, Response,
-};
-
-async fn find_index(req: Request, _c: Context) -> Result<impl IntoResponse, Error> {
-    // ...
-}
-```
-
-`IntoResponse` is a convenient trait implemented for some standard types like `()`, `String` or `&str`. It is also implemented for `Value` which is what you get by constructing a JSON object using `serde_json` library as we will see below. So easy.
-
-Before we write out next line, we need to decide on the shape of input to our API. Since we need at least an array of numbers and the number to look for, it makes sense to expect a JSON object:
-
-```json
-{
-  "array": [1, 2, 3, 4, 5],
-  "num": 3
-}
-```
-
-Let's go on and define it as a `struct`:
-
-```rust
-#[derive(Debug, Deserialize)]
-struct SearchRequest {
-    array: Vec<i32>,
-    num: i32,
-}
-```
-
-The `Deserialize` part is important. This tells `serde` _how_ to deserialize text from the body to our type. Now that we have this in place, we can deserialize the raw body to `SearchRequest`.
-
-```rust
-let payload = req.payload::<SearchRequest>()?; // Deserialize request.
-let data = payload.ok_or("No body!")?; // Check if body exists.
-```
+Don't forget the `#[tokio::main]` bit. This is an [attribute macro](https://doc.rust-lang.org/reference/procedural-macros.html) from `tokio` that does some magic under the hood to make our `main` function async.
 
 ## CDK project
 
