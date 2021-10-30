@@ -14,7 +14,6 @@ Hi! My name is Kirill and I am software engineer at [Progate Inc.](https://proga
 
 ## What I'm working on
 
-- As a part of my job, I am building and maintaining an e-commerce platform for a multinational company.
 - I'm one of the lead developers on [orogene](https://github.com/orogene/orogene) and [statictrace](https://github.com/yumemi-inc/statictrace).
 - I [write](https://www.kirillvasiltsov.com/writing/) about technology sometimes.
 - I'm getting involved with the Rust ecosystem and I'm looking forward to contribute more to the Rust community.
