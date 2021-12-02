@@ -27,7 +27,7 @@ class Square {}
 class Circle {}
 class Triangle {}
 
-type Shape = Square | Circle | Triangle
+type Shape = Square | Circle | Triangle;
 ```
 
 The bad way would be to just have a single `draw()` function and use conditions to find out how to draw a particular shape:
@@ -50,7 +50,7 @@ One type-safe alternative is to define a `Drawable` interface. `interface` here 
 
 ```ts
 interface Drawable {
-  draw: () => void
+  draw: () => void;
 }
 ```
 
@@ -65,11 +65,11 @@ class Triangle {}
 
 function draw(shapes: Array<Drawable>) {
   for (const shape of shapes) {
-    shape.draw() // Square, etc...
+    shape.draw(); // Square, etc...
   }
 }
 
-draw([new Triangle()]) // Compile error!
+draw([new Triangle()]); // Compile error!
 ```
 
 Good. Even better if we force every shape to `implement` it which is another nice thing possible in TypeScript!
@@ -92,7 +92,7 @@ Imagine at some point we decide to support one more behavior -- area calculation
 
 ```ts
 interface Area {
-  area: () => number
+  area: () => number;
 }
 ```
 
@@ -133,9 +133,9 @@ What if there was a way to group all possible cases in one place, just like we g
 
 ```ts
 interface ShapeVisitor {
-  visitCircle(shape: Circle): void
-  visitSquare(shape: Square): void
-  visitTriangle(shape: Triangle): void
+  visitCircle(shape: Circle): void;
+  visitSquare(shape: Square): void;
+  visitTriangle(shape: Triangle): void;
 }
 ```
 
@@ -155,7 +155,7 @@ Remember, our goal here is to get rid of the need to add new behavior to each cl
 
 ```ts
 interface Drawable {
-  accept(visitor: ShapeVisitor): void
+  accept(visitor: ShapeVisitor): void;
 }
 ```
 
@@ -164,7 +164,7 @@ What is `accept`? That's just another convention of this pattern. You can name i
 ```ts
 class Square implements Drawable {
   accept(visitor: ShapeVisitor) {
-    visitor.visitSquare(this)
+    visitor.visitSquare(this);
   }
 }
 
@@ -178,7 +178,7 @@ class Drawer implements ShapeVisitor {
   /* visit functions */
 
   draw(shape: Drawable) {
-    shape.accept(this)
+    shape.accept(this);
   }
 }
 ```
@@ -186,18 +186,18 @@ class Drawer implements ShapeVisitor {
 Quite a lot of indirection but hopefully now you see how it works. Somewhere in our code we draw a shape a like this:
 
 ```ts
-const drawer = new Drawer()
-drawer.draw(new Square())
+const drawer = new Drawer();
+drawer.draw(new Square());
 ```
 
 Now if we decide to support one more shape, e.g. a `Star`, we don't have to add code for every possible behavior to this new class. Instead we make it visitable and then implement the details in relevant visitors. The visitors, of course, will need to have a new method, like `visitStar`. We would start with adding it to the interface `ShapeVisitor` to make sure that every class that `implements` it has a `visitStar` method.
 
 ```ts
 interface ShapeVisitor {
-  visitCircle(shape: Circle): void
-  visitSquare(shape: Square): void
-  visitTriangle(shape: Triangle): void
-  visitStar(shape: Star): void
+  visitCircle(shape: Circle): void;
+  visitSquare(shape: Square): void;
+  visitTriangle(shape: Triangle): void;
+  visitStar(shape: Star): void;
 }
 ```
 
@@ -211,13 +211,13 @@ Sometimes it's best to just read the whole code so here's what we have written s
 
 ```ts
 interface Drawable {
-  accept(visitor: ShapeVisitor): void
+  accept(visitor: ShapeVisitor): void;
 }
 
 interface ShapeVisitor {
-  visitCircle(shape: Circle): void
-  visitSquare(shape: Square): void
-  visitTriangle(shape: Triangle): void
+  visitCircle(shape: Circle): void;
+  visitSquare(shape: Square): void;
+  visitTriangle(shape: Triangle): void;
 }
 
 class Drawer implements ShapeVisitor {
@@ -228,25 +228,25 @@ class Drawer implements ShapeVisitor {
   visitTriangle(shape: Triangle) {}
 
   draw(shape: Drawable) {
-    shape.accept(this)
+    shape.accept(this);
   }
 }
 
 class Square implements Drawable {
   accept(visitor: ShapeVisitor) {
-    visitor.visitSquare(this)
+    visitor.visitSquare(this);
   }
 }
 
 class Circle implements Drawable {
   accept(visitor: ShapeVisitor) {
-    visitor.visitCircle(this)
+    visitor.visitCircle(this);
   }
 }
 
 class Triangle implements Drawable {
   accept(visitor: ShapeVisitor) {
-    visitor.visitTriangle(this)
+    visitor.visitTriangle(this);
   }
 }
 ```
@@ -260,7 +260,7 @@ If you are a sharp reader, you probably noticed that nothing prevents us from do
 ```ts
 class Triangle implements Drawable {
   accept(visitor: ShapeVisitor) {
-    visitor.visitSquare(this) // Attention here.
+    visitor.visitSquare(this); // Attention here.
   }
 }
 ```

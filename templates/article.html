@@ -1,4 +1,4 @@
-{% extends "base.html" %} {% block headtags %}
+{% extends "page.html" %} {% block headtags %}
 <title>{{ page.title }} | Writing | Kirill Vasiltsov</title>
 <meta property="og:url" content="{{page.path}}" />
 <meta property="og:type" content="article" />
@@ -35,7 +35,9 @@
   main {
     max-width: 768px;
     margin: 0 auto;
-    display: grid;
+    display: flex;
+    flex-direction: column;
+    row-gap: 8px;
     min-height: 100%;
     padding: 1em;
     row-gap: 1em;
