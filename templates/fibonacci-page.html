@@ -1,0 +1,76 @@
+{% extends "base.html" %} {% block headtags %}
+<title>{{ page.title }} | Writing | Kirill Vasiltsov</title>
+<meta property="og:url" content="{{page.path}}" />
+<meta property="og:type" content="article" />
+<meta property="og:title" content="{{ page.title }}" />
+<meta
+  name="Description"
+  content="{% if page.description %}{{page.description}}{% else %}{{page.title}}{% endif %}"
+/>
+<meta
+  property="og:description"
+  content="{% if page.description %}{{page.description}}{% else %}{{page.title}}{% endif %}"
+/>
+<meta
+  property="og:image"
+  content="https://www.kirillvasiltsov.com/thumbnail.png"
+/>
+<meta name="twitter:card" content="summary" />
+<meta name="twitter:creator" content="https://twitter.com/virtualkirill/" />
+<meta name="twitter:title" content="{{ page.title }}" />
+<meta
+  name="twitter:description"
+  content="{% if page.description %}{{page.description}}{% else %}{{page.title}}{% endif %}"
+/>
+<meta
+  name="twitter:image"
+  content="https://www.kirillvasiltsov.com/thumbnail.png"
+/>
+<script defer src="/bundle.js"></script>
+<link rel="stylesheet" href="/bundle.css">
+{% endblock headtags %} {% block styles %}
+<style>
+  h1 {
+    font-size: 1.8em;
+  }
+
+  main {
+    max-width: 768px;
+    margin: 0 auto;
+    display: grid;
+    min-height: 100%;
+    padding: 1em;
+    row-gap: 1em;
+  }
+
+  img {
+    padding: 1em 0;
+    margin: 0 auto;
+  }
+
+  pre > code {
+    font-family: "Source Code Pro";
+    font-size: 0.9em;
+  }
+
+  pre {
+    display: block;
+    padding: 1em;
+    border-radius: 0.2em;
+    max-width: 100%;
+    overflow-x: auto;
+  }
+
+  p > code {
+    background-color: rgb(230, 174, 137);
+    padding: 0.2em;
+    font-size: 0.8em;
+    border-radius: 0.3em;
+  }
+</style>
+{% endblock styles %} {% block content %}
+<main>
+  <h1 class="title">{{ page.title }}</h1>
+  {{ page.content | safe }}
+</main>
+{% endblock content %}
