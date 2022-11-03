@@ -3,29 +3,16 @@
 <meta property="og:url" content="{{page.path}}" />
 <meta property="og:type" content="article" />
 <meta property="og:title" content="{{ page.title }}" />
-<meta
-  name="Description"
-  content="{% if page.description %}{{page.description}}{% else %}{{page.title}}{% endif %}"
-/>
-<meta
-  property="og:description"
-  content="{% if page.description %}{{page.description}}{% else %}{{page.title}}{% endif %}"
-/>
-<meta
-  property="og:image"
-  content="https://www.kirillvasiltsov.com/thumbnail.png"
-/>
+<meta name="Description" content="{% if page.description %}{{page.description}}{% else %}{{page.title}}{% endif %}" />
+<meta property="og:description"
+  content="{% if page.description %}{{page.description}}{% else %}{{page.title}}{% endif %}" />
+<meta property="og:image" content="https://www.kirillvasiltsov.com/thumbnail.png" />
 <meta name="twitter:card" content="summary" />
 <meta name="twitter:creator" content="https://twitter.com/virtualkirill/" />
 <meta name="twitter:title" content="{{ page.title }}" />
-<meta
-  name="twitter:description"
-  content="{% if page.description %}{{page.description}}{% else %}{{page.title}}{% endif %}"
-/>
-<meta
-  name="twitter:image"
-  content="https://www.kirillvasiltsov.com/thumbnail.png"
-/>
+<meta name="twitter:description"
+  content="{% if page.description %}{{page.description}}{% else %}{{page.title}}{% endif %}" />
+<meta name="twitter:image" content="https://www.kirillvasiltsov.com/thumbnail.png" />
 {% endblock headtags %} {% block styles %}
 <style>
   h1 {
@@ -45,7 +32,7 @@
     padding: 1em 0;
   }
 
-  pre > code {
+  pre>code {
     font-family: "Source Code Pro";
     font-size: 0.9em;
   }
@@ -58,12 +45,32 @@
     overflow-x: auto;
   }
 
-  p > code {
-    background-color: rgb(230, 174, 137);
-    padding: 0.2em;
+  p>code {
+    background-color: var(--mono);
+    padding: 0.25em;
     font-size: 0.8em;
+    border-radius: 0.4em;
+  }
+
+  .extra {
+    font-size: 14px;
+    background-color: var(--extra);
+    color: white;
+    padding: 0.8em;
     border-radius: 0.3em;
   }
+
+  .extra img {
+    margin: 0 auto;
+    line-height: 1.2;
+  }
+
+  @media screen and (min-width: 768px) {
+    .extra img {
+      width: 60%;
+    }
+  }
+
 </style>
 {% endblock styles %} {% block content %}
 <main>
