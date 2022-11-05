@@ -10,6 +10,7 @@ Hi! My name is Kirill and I am software engineer at [Progate Inc.](https://proga
 - [typerust](https://github.com/jlkiri/typerust) (author): another Rust playground with a nice interface.
 - [ikki](https://github.com/jlkiri/ikki) (author): a tool for defining and running multi-container Docker applications written in Rust.
 - [orogene](https://github.com/orogene/orogene) (core member): next-generation package manager written in Rust for JavaScript/Node.js projects.
+- [daemon](https://github.com/langjam/jam0002/tree/main/daemon) @Lang Jam #2 (author): a domain-specific language that helps to decouple program state from temporal state.
 - [statictrace](https://github.com/yumemi-inc/statictrace) (author): a library for semi-automatic static testing. A new approach to code quality assurance that utilizes TypeScript compiler API to be used alongside traditional tests and documentation.
 
 ## Presentations
