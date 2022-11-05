@@ -111,4 +111,8 @@ The response always includes the [status code](https://developer.mozilla.org/en-
 
 The response tracks the similar route out of the server instance's network as the route that your request took. When it reaches the browser's machine, the system de-encapsulates the Ethernet frames, the IP packets and the TCP segments. All segments with the destination port that matches the port the browser asked the OS to open are forwarded to the browser's process. The browser's code is responsible for reading the appropriate buffer until `EOF` (until there is nothing to read). Those bytes represent an encrypted HTTPS response.
 
-The browser uses the shared secret agreed on earlier during the TLS handshake to decrypt the response. 
+The browser uses the shared secret agreed on earlier during the TLS handshake to decrypt the response. Then the encrypted bytes are parsed as HTTP. If the `content-type` header happens to be `text/html` the browser starts to parse the response body as HTML. It starts with the `<head>` element. Usually a web page contains a few links to the page's *asset* files like CSS or JavaScript. As soon as the browser discovers a `<link rel="stylesheet">` to a CSS file or a `<script>` tag with JavaScript inside or a `src` attribute link to the JavaScript file, it blocks *rendering* until the CSS can be downloaded and JavaScript downloaded and executed. To download asset files the browser opens new TCP connections that follow the similar proccess we saw earlier. In some cases (which I am not sure about) the same TCP connection can be re-used.
+
+{% extra() %}
+The single TCP connection is re-used for assets when [HTTP/2](https://en.wikipedia.org/wiki/HTTP/2) is used, by specification. Interleaving multiple response's TCP segments, or *multiplexing*, is one of the advantages of HTTP/2.
+{% end %}
