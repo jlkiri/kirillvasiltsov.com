@@ -1,6 +1,6 @@
 ---
 title: "What happens when you type a URL into your browser: The whole story"
-date: "2022-11-03"
+date: "2022-11-06"
 ---
 
 A lot of things happen after you type a URL in the address bar of your browser and press Enter, and before the browser can show the page to you. First of all, the browser needs to *resolve* the hostname part of the URL to an IP address of the web server. This is because other computers on the Internet are accessible by their IP addresses, not their names.
