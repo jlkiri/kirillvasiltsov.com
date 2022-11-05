@@ -57,7 +57,7 @@ You are probably noticing some pattern. The system keeps wrapping, or *encapsula
 
 ![tcpip](tcpip.png)
 
-A message at every layer begins with a header that is just a bunch of bytes in certain order. These bytes have special meaning that is defined in a RFC. For example, IP packet headers include information like protocol version and total length of contents before the source address field. TCP segment headers include information like segment number, source/destination port number, window size etc. In the screenshot below, I used Wireshark to analyze my own traffic. I ran a `dig` command to resolve my blog's domain name `kirillvasiltsov.com` to an IP address. You can see encapsulation in action: Ethernet header is marked with yellow, IP header with blue, UDP header with orange and the rest is DNS header + message.
+A message at every layer begins with a *header* that is just a bunch of bytes in certain order. These bytes have special meaning that is defined in a RFC. For example, HTTP/1.1 specification lives in [RFC 9112](https://httpwg.org/specs/rfc9112.html). IP packet headers include information like protocol version and total length of contents before the source address field. TCP segment headers include information like segment number, source/destination port number, window size etc. In the screenshot below, I used Wireshark to analyze my own traffic. I ran a `dig` command to resolve my blog's domain name `kirillvasiltsov.com` to an IP address. You can see encapsulation in action: Ethernet header is marked with yellow, IP header with blue, UDP header with orange and the rest is DNS header + message.
 
 ![encapsulation](encapsulation.png)
 {% end %}
@@ -113,8 +113,18 @@ The response tracks the similar route out of the server instance's network as th
 
 The browser uses the shared secret agreed on earlier during the TLS handshake to decrypt the response. Then the encrypted bytes are parsed as HTTP. If the `content-type` header happens to be `text/html` the browser starts to parse the response body as HTML. It starts with the `<head>` element. Usually a web page contains a few links to the page's *asset* files like CSS or JavaScript. As soon as the browser discovers a `<link rel="stylesheet">` to a CSS file or a `<script>` tag with JavaScript inside or a `src` attribute link to the JavaScript file, it blocks *rendering* until the CSS can be downloaded and JavaScript downloaded and executed. To download asset files the browser opens new TCP connections that follow the similar proccess we saw earlier. In some cases (which I am not sure about) the same TCP connection can be re-used.
 
-The assets do not necessarily live on the same server as the page. Often the resources are served from a [CDN](https://en.wikipedia.org/wiki/Content_delivery_network) (Content Delivery Network).
+The assets do not necessarily live on the same server as the page. Often the resources are served from a [CDN](https://en.wikipedia.org/wiki/Content_delivery_network) (Content Delivery Network). This is the network of servers that cache the origin server's responses physically closer to the user to reduce request latency and load on origin servers. If the requested page has links to CDN-hosted assets, the domain resolution is required for those domain names as well.
 
 {% extra() %}
-The single TCP connection is re-used for assets when [HTTP/2](https://en.wikipedia.org/wiki/HTTP/2) is used, by specification. Interleaving multiple response's TCP segments, or *multiplexing*, is one of the advantages of HTTP/2.
+By specification, a single TCP connection is re-used for assets in [HTTP/2](https://en.wikipedia.org/wiki/HTTP/2). Interleaving TCP segments belonging to different responses on the wire by dividing an HTTP message itself into *frames* is one of the advantages of HTTP/2. This is called *multiplexing*.
 {% end %}
+
+After the browser downloads CSS, it parses it to build [CSSOM](https://developer.mozilla.org/en-US/docs/Web/API/CSS_Object_Model) (CSS Object Model). This is a tree representation of the styles and their scope in the page. The downloaded JavaScript also has to be executed before the browser can proceed rendering the page. To do that, the browser uses a JavaScript engine that turns JavaScript code into machine instructions. Different browsers use different engines.
+
+{% extra() %}
+For example, [V8 engine](https://v8.dev/) used in Chrome runs JavaScript in one or more *isolates*, small virtual machines with their own heap.
+{% end %}
+
+Once the browser is done building CSSOM and executing JavaScript, it parses the rest of the HTML document to build [DOM](https://developer.mozilla.org/en-US/docs/Web/API/Document_Object_Model/Introduction) (Document Object Model). DOM is a tree representation of the structure of the page. DOM and CSSOM are combined into a render tree, the information that is actually used to calculate the size and position of DOM nodes and determine their visibility. The browser uses the result of calculation to finally paint visible objects to the *viewport*.
+
+The browser also looks at the `Cache-Control` header that may ask the browser to cache the response locally. If caching is enabled, the browser caches the response for the specified time. Subsequent requests will not go all the way to the origin serve and instead the cached response will be returned immediately.
