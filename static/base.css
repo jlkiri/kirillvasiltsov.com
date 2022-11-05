@@ -6,21 +6,16 @@
 }
 
 :root {
-  font-family: "Lora", system-ui;
+  font-family: "Source Serif Pro", system-ui;
   color-scheme: light dark;
 
-  --beige: hsl(28, 71%, 80%);
-  --indigo: hsl(257, 37%, 20%);
-  --black: hsl(254, 58%, 7%);
+  --bg: hsl(0, 0%, 100%);
+  --fg: hsl(0, 2%, 25%);
+  --mono: hsla(234, 81%, 79%, 0.279);
 
-  /* --bg: hsl(255, 100%, 99%);
-    --link: hsl(258, 81%, 59%);
-    --text: hsl(258, 20%, 20%); */
-  --aux: hsl(258, 20%, 59%);
+  --link: hsl(228, 93%, 68%);
 
-  --bg: hsl(257, 39%, 7%);
-  --link: hsl(258, 71%, 80%);
-  --text: hsl(27, 20%, 80%);
+  --extra: rgba(121, 119, 140, 0.87);
 }
 
 ::selection {
@@ -48,21 +43,20 @@ ul {
 }
 
 a {
-  color: rgb(63, 118, 167);
-  transition: color 200ms;
+  color: var(--link);
   font-weight: bold;
 }
 
 a:hover {
-  color: rgb(0, 136, 255);
+  filter: brightness(0.5);
 }
 
 /* Set core body defaults */
 body {
   text-rendering: optimizeSpeed;
-  line-height: 1.25;
-  color: black;
-  background-color: rgba(255, 247, 238, 0.952);
+  line-height: 1.35;
+  color: var(--fg);
+  background-color: var(--bg);
 }
 
 @media screen and (min-width: 768px) {
@@ -87,8 +81,8 @@ body * {
 /* Remove list styles on ul, ol elements with a list role, which suggests default styling will be removed */
 ul,
 ol {
-  list-style: none;
   padding: 0;
+  list-style: none;
 }
 
 /* Set core root defaults */

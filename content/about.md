@@ -7,13 +7,17 @@ Hi! My name is Kirill and I am software engineer at [Progate Inc.](https://proga
 
 ## What I've done
 
-- [statictrace](https://github.com/yumemi-inc/statictrace): a library for semi-automatic static testing. A new approach to code quality assurance that utilizes TypeScript compiler API to be used alongside traditional tests and documentation.
-- [orogene](https://github.com/orogene/orogene): a next-generation package manager written in Rust for JavaScript/Node.js projects.
-- [rust-sdlang](https://github.com/jlkiri/rust-sdlang), [react-easy-flip](https://github.com/jlkiri/react-easy-flip) and more.
-- I [spoke](https://www.youtube.com/watch?v=9S8GUTcMsgA) at [Svelte Summit](https://sveltesummit.com/) 2020 ([see text version](https://www.kirillvasiltsov.com/writing/unlocking-the-power-of-svelte-actions/)).
+- [typerust](https://github.com/jlkiri/typerust) (author): another Rust playground with a nice interface.
+- [ikki](https://github.com/jlkiri/ikki) (author): a tool for defining and running multi-container Docker applications written in Rust.
+- [orogene](https://github.com/orogene/orogene) (core member): next-generation package manager written in Rust for JavaScript/Node.js projects.
+- [statictrace](https://github.com/yumemi-inc/statictrace) (author): a library for semi-automatic static testing. A new approach to code quality assurance that utilizes TypeScript compiler API to be used alongside traditional tests and documentation.
+
+## Presentations
+-  [Svelte Summit](https://sveltesummit.com/) 2020: [video](https://www.youtube.com/watch?v=9S8GUTcMsgA),  [text version](https://www.kirillvasiltsov.com/writing/unlocking-the-power-of-svelte-actions/)
+-  [Rust Tokyo](https://rust.tokyo/2021/lineup/en) 2021: `Node.js in Rust: How to do it and what to expect from it` (experience from building `orogene`)
 
 ## What I'm working on
 
-- I'm one of the lead developers on [orogene](https://github.com/orogene/orogene) and [statictrace](https://github.com/yumemi-inc/statictrace).
 - I [write](https://www.kirillvasiltsov.com/writing/) about technology sometimes.
+- I am building a toy cloud that might allow beginners to get hands dirty with cloud technology and deployments without paying for services like AWS or GCP.
 - I'm getting involved with the Rust ecosystem and I'm looking forward to contribute more to the Rust community.
