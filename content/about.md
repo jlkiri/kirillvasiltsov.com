@@ -15,7 +15,7 @@ Hi! My name is Kirill and I am software engineer at [Progate Inc.](https://proga
 
 ## Presentations
 -  [Svelte Summit](https://sveltesummit.com/) 2020: [video](https://www.youtube.com/watch?v=9S8GUTcMsgA),  [text version](https://www.kirillvasiltsov.com/writing/unlocking-the-power-of-svelte-actions/)
--  [Rust Tokyo](https://rust.tokyo/2021/lineup/en) 2021: `Node.js in Rust: How to do it and what to expect from it` (experience from building `orogene`)
+-  [Rust Tokyo](https://rust.tokyo/2021/lineup/en) 2021: [video](https://www.youtube.com/watch?v=qIUB7dPt5ZU), [speakerdeck](https://speakerdeck.com/jlkiri/node-dot-js-in-rust-how-to-do-it-and-what-to-expect-from-it)
 
 ## What I'm working on
 
