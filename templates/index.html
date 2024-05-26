@@ -15,12 +15,37 @@
 <style>
   h2::after {
     content: "";
-    border-right: 0.7em solid rgb(68, 75, 72);
+    border-right: 0.7em solid var(--text);
     animation: 2s blink steps(2) infinite;
   }
 
-  .quick-links {
-    
+  section {
+    border: 2px solid var(--text);
+    padding: 1em;
+    width: 100%;
+  }
+
+  section nav {
+    padding: 1em 0; 
+  }
+
+  section nav > ul {
+    display: flex;
+    gap: 0.5em;
+  }
+
+  nav a {
+    color: white;
+    background-color: navy;
+    font-weight: normal;
+    padding: 0.2em;
+    border: 1px solid var(--text);
+    text-decoration: none;
+    box-shadow: 3px 3px grey;
+  }
+
+  section a:hover {
+    background-color: var(--text);
   }
 
   @keyframes blink {
@@ -40,8 +65,8 @@
     <h1>Kirill Vasiltsov</h1>
     <h2>Software engineer</h2>
 
-    <nav class="quick-links">
-      <ul class="quick-links__list">
+    <nav>
+      <ul>
         <li>
           <a href="https://github.com/jlkiri">GitHub</a>
         </li>

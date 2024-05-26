@@ -22,9 +22,11 @@ pre>code {
 pre {
   display: block;
   padding: 1em;
-  margin-top: 1em;
-  border-radius: 0.2em;
+  margin-top: 2em;
+  font-size: 0.9em;
+  margin-bottom: 1em;
   max-width: 100%;
+  border: 2px dashed lightgray;
   overflow-x: auto;
 }
 
@@ -32,8 +34,7 @@ a>code, p>code {
   background-color: var(--mono);
   font-family: "Berkeley Mono";
   padding: 0.25em;
-  font-size: 14px;
-  border-radius: 0.4em;
+  font-size: 0.8em;
 }
 
 .extra {
@@ -41,7 +42,6 @@ a>code, p>code {
   border: 1px dashed black;
   background-color: hsla(259, 5%, 95%, 1);
   padding: 0.8em;
-  border-radius: 0.3em;
   margin-top: 2em;
   margin-bottom: 1em;
 }

@@ -1,9 +1,9 @@
 :root {
   font-family: "Berkeley Mono", system-ui;
-  color-scheme: light dark;
+  font-size: 14px;
 
   --bg: hsl(0, 0%, 100%);
-  --text: hsl(0, 2%, 25%);
+  --text: #0f0f0f;
   --mono: hsla(202, 24%, 86%, 1);
   --link: hsla(252, 79%, 44%, 1);
   --extra: rgba(121, 119, 140, 0.87);
@@ -413,6 +413,17 @@ main {
   display: flex;
   padding-top: 1em;
   padding-bottom: 1em;
+}
+
+h1 {
+  font-weight: bold;
+  font-size: 1.4rem;
+  text-transform: uppercase;
+}
+
+h2 {
+  font-weight: bold;
+  text-transform: uppercase;
 }
 
 /* Show focus ring only when navigated with keyboard */
