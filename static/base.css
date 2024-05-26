@@ -443,6 +443,7 @@ a {
 
 a:hover{
   background-color: var(--link);
+  text-decoration: none;
   color: white;
 }
 
