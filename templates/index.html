@@ -13,50 +13,14 @@
 <meta name="twitter:image" content="https://www.kirillvasiltsov.com/thumbnail.png" />
 {% endblock headtags %} {% block styles %}
 <style>
-  main {
-    max-width: 768px;
-    margin: 0 auto;
-    display: grid;
-    place-items: center;
-    min-height: 100%;
-  }
-
-  h1,
-  h2 {
-    line-height: 1.2;
-    font-weight: bold;
-    letter-spacing: -0.01em;
-  }
-
-  h2 {
-    font-size: 1.2rem;
-    filter: brightness(0.8);
-  }
-
   h2::after {
     content: "";
     border-right: 0.7em solid rgb(68, 75, 72);
-    margin-left: 0.5em;
-    font-size: 0.9em;
     animation: 2s blink steps(2) infinite;
   }
 
-  .quick-links__list {
-    display: grid;
-    padding-left: 0;
-    padding-top: 1em;
-    column-gap: 1em;
-    grid-template-columns: repeat(5, max-content);
-    perspective: 850px;
-  }
-
-  .quick-links__list>li>a {
-    font-weight: bold;
-  }
-
-  .quick-links__list>li:hover {
-    transform: rotateY(25deg) rotateX(10deg) rotateZ(-2deg);
-    filter: drop-shadow(-2px 2px 0px var(--bg)) drop-shadow(-2px 2px 0px hsla(32, 31%, 63%, 0.4));
+  .quick-links {
+    
   }
 
   @keyframes blink {

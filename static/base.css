@@ -4,8 +4,8 @@
 
   --bg: hsl(0, 0%, 100%);
   --text: hsl(0, 2%, 25%);
-  --mono: hsla(234, 81%, 79%, 0.279);
-  --link: hsl(228, 93%, 68%);
+  --mono: hsla(202, 24%, 86%, 1);
+  --link: hsla(252, 79%, 44%, 1);
   --extra: rgba(121, 119, 140, 0.87);
 }
 
@@ -398,6 +398,7 @@ html {
 /* Set core body defaults */
 body {
   min-height: 100%;
+  height: 100%;
   text-rendering: optimizeSpeed;
   /* line-height: 1.35; */
   color: var(--text);
@@ -406,15 +407,12 @@ body {
 
 main {
   max-width: 768px;
+  min-height: 100%;
+  align-items: center;
   margin: 0 auto;
-  display: grid;
-  /* height: 100vh; */
-  /* min-height: 100%; */
+  display: flex;
   padding-top: 1em;
-  /* min-height: 100%; */
-  /* height: 100%; */
   padding-bottom: 1em;
-  /* row-gap: 1em; */
 }
 
 /* Show focus ring only when navigated with keyboard */
@@ -425,7 +423,14 @@ button:focus:not(:focus-visible) {
 a {
   color: var(--link);
   font-weight: bold;
+  text-decoration: underline dotted;
+  text-decoration-thickness: 11%;
   text-decoration-skip-ink: auto;
+}
+
+a:hover{
+  background-color: var(--link);
+  color: white;
 }
 
 /* @media screen and (min-width: 768px) { */
