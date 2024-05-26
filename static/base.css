@@ -419,11 +419,13 @@ h1 {
   font-weight: bold;
   font-size: 1.4rem;
   text-transform: uppercase;
+  font-family: "Berkeley Mono";
 }
 
 h2 {
   font-weight: bold;
   text-transform: uppercase;
+  font-family: "Berkeley Mono";
 }
 
 /* Show focus ring only when navigated with keyboard */

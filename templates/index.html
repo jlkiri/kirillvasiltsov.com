@@ -20,8 +20,8 @@
   }
 
   section {
-    border: 2px solid var(--text);
     padding: 1em;
+    border: none;
     width: 100%;
   }
 
@@ -47,6 +47,12 @@
   section a:hover {
     background-color: var(--text);
   }
+  
+  @media screen and (min-width: 768px) {
+    section {
+      border: 2px solid var(--text);
+    }
+  }
 
   @keyframes blink {
     from {
@@ -56,6 +62,7 @@
     to {
       visibility: visible;
     }
+    
   }
 
 </style>
