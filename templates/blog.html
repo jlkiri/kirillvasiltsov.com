@@ -1,32 +1,51 @@
-{% extends "base.html" %} {% block styles %}
+{% extends "base.html" %}
+{% block styles %}
 <style>
-  ul {
-    display: grid;
-    padding: 0.8em;
-    grid-template-columns: auto 1fr;
-    justify-content: center;
-    align-items: center;
-    column-gap: 0.7em;
-    row-gap: 1em;
-  }
-
   .date {
     color: black;
     font-weight: bold;
     font-size: 0.8em;
   }
 
+  nav {
+    border: 1px solid gray;
+    box-shadow: 3px 3px lightgray;
+  }
+
+  ul {
+    display: flex;
+    flex-direction: column;
+  }
+
+  li:nth-child(odd) {
+    background-color: whitesmoke;
+  }
+
   li {
+    display: flex;
+    align-items: center;
+    gap: 1em;
+    padding: 0.4em;
     word-break: break-word;
   }
+
+  li .date {
+    flex-shrink: 0;
+  }
 </style>
-{% endblock styles %} {% block content %}
+{% endblock styles %}
+
+{% block content %}
 <main>
-  <ul>
-    {% for page in section.pages %}
-    <div class="date">{{page.date}}</div>
-    <li><a href="{{ page.permalink | safe }}">{{ page.title }}</a></li>
-    {% endfor %}
-  </ul>
+  <nav>
+    <ul>
+      {% for page in section.pages %}
+      <li>
+        <div class="date">{{ page.date }}</div>
+        <a href="{{ page.permalink | safe }}">{{ page.title }}</a>
+      </li>
+      {% endfor %}
+    </ul>
+  </nav>
 </main>
 {% endblock content %}
