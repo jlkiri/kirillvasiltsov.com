@@ -18,9 +18,12 @@ img {
   padding: 1em 0;
 }
 
+code {
+  font-family: "Berkeley Mono";
+}
+
 pre>code {
   font-size: 0.9em;
-  font-family: "Berkeley Mono";
 }
 
 pre {
@@ -34,11 +37,14 @@ pre {
   overflow-x: auto;
 }
 
-a>code, p>code {
+:is(a,p)>code {
   background-color: var(--mono);
-  font-family: "Berkeley Mono";
   padding: 0.25em;
   font-size: 0.8em;
+}
+
+a:hover>code {
+  background-color: transparent;
 }
 
 .extra {
@@ -48,10 +54,6 @@ a>code, p>code {
   padding: 0.8em;
   margin-top: 2em;
   margin-bottom: 1em;
-}
-
-.extra code {
-  font-size: 0.7em;
 }
 
 .extra p {
