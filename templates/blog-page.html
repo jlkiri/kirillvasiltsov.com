@@ -1,5 +1,13 @@
 {% extends "base.html" %}
 
+{% block styles %}
+<style>
+  a {
+    font-family: "Berkeley Mono";
+  }
+</style>
+{% endblock styles %}
+
 {% block headtags %}
 <link rel="stylesheet" href="/page.css" />
 <title>{{ page.title }} | Writing | Kirill Vasiltsov</title>
