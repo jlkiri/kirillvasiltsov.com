@@ -37,7 +37,7 @@ pre {
   overflow-x: auto;
 }
 
-:is(a,p)>code {
+:is(a, p)>code {
   background-color: var(--mono);
   padding: 0.25em;
   font-size: 0.8em;

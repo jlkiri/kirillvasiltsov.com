@@ -26,10 +26,10 @@
   }
 
   section nav {
-    padding: 1em 0; 
+    padding: 1em 0;
   }
 
-  section nav > ul {
+  section nav>ul {
     display: flex;
     gap: 0.5em;
   }
@@ -38,7 +38,7 @@
     color: white;
     background-color: navy;
     font-weight: normal;
-    padding: 0.2em;
+    padding: 0.3em 0.5em;
     border: 1px solid var(--text);
     text-decoration: none;
     box-shadow: 3px 3px grey;
@@ -47,10 +47,10 @@
   section a:hover {
     background-color: var(--text);
   }
-  
+
   @media screen and (min-width: 768px) {
     section {
-      border: 2px solid var(--text);
+      border: 2px solid dimgray;
     }
   }
 
@@ -62,9 +62,8 @@
     to {
       visibility: visible;
     }
-    
-  }
 
+  }
 </style>
 {% endblock styles %} {% block content %}
 <main>
